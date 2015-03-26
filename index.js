@@ -5,8 +5,11 @@ var box = $('#msg');
 
 $(function(){
     $('#btnSend').click(send);
-    msgBox.keyup(function(event){
-        if(event.which == 13) {
+    msgBox.keydown(function(event){
+        if (event.which == 13 && event.ctrlKey) {
+          msgBox.val(msgBox.val() + '\n'); // Ctrl-Enter for new line
+        }
+        if (event.which == 13 && !event.ctrlKey) { // Enter for send
             send();
             return false;
         }
@@ -26,6 +29,8 @@ ws.onmessage = function(evt) {
 
 function send() {
     var message = msgBox.val();
+    if (message.length == 0)
+      return;
     if (message.length > message_max_length) {
         alert('Message is too long');
         return;
